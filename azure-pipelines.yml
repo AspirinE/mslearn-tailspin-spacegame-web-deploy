@@ -64,3 +64,26 @@ stages:
 
         - publish: '$(Build.ArtifactStagingDirectory)'
           artifact: drop
+  - stage: 'Deploy'
+    displayName: 'deploy web app'
+    dependsOn: Build
+    jobs:
+    - deployment: Deploy
+      pool:
+        vmImage: 'ubuntu-20.04'
+      enviroment: dev
+      variables:
+      - group: Release
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - download: current
+              artifact: drop
+            - task: AzureWebApp@1
+              displayName: 'azure app service deploy: website'
+              inputs:
+                azureSubscription: 'resource manager -tailspin - spacegame'
+                appName: '$(webAppName)'
+                package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+                
