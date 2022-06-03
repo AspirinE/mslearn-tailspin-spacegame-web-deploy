@@ -86,4 +86,5 @@ stages:
                 azureSubscription: 'resource manager -tailspin - spacegame'
                 appName: '$(webAppName)'
                 package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+                
 
